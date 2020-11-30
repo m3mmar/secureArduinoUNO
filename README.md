@@ -1,4 +1,4 @@
-# A simple Software-based Security for ATmega328P Microcontroller
+# A simple Software-based Security Architecture for ATmega328P Microcontroller
 
 ## This repo represents an instantiated implementation of the Security MicroVisor on Arduino UNO that has AVR ATmega328P MCU. This implementation provides memory isolation, remote attestation, and authenticated code deployment. 
 
@@ -36,9 +36,9 @@
 
 ## Let's do a quick Test!
 - Let's test the implementation with the hello_world app!
-1- Connect your Arduino UNO platform to your computer through the usb port. Also, please connect the JTAG port using JTAGICE3. If you have other external programers, modify the configurations accordingly in core/Makefile.include.
-2- navigate to apps/hello_world.
-3- Run as a first command: "make fuse4". This will configure some hardware fuses on the platform. Please make sure it succeeded before moving to the next step. You should expect as output like: 
+- Connect your Arduino UNO platform to your computer through the usb port. Also, please connect the JTAG port using JTAGICE3. If you have other external programers, modify the configurations accordingly in core/Makefile.include.
+- navigate to apps/hello_world.
+- Run as a first command: "make fuse4". This will configure some hardware fuses on the platform. Please make sure it succeeded before moving to the next step. You should expect as output like: 
 
             avrdude: verifying ...
             avrdude: 1 bytes of lock verified
@@ -47,28 +47,28 @@
 
             avrdude done.  Thank you.
 
-4- Run the command: "make main.hex" to produce the .HEX file that has to be deployed on the platform. You should see this file in apps/hello_world folder after running this command.
-5- Run the command: "make flash" to deploy the .HEX file on the connected platform. 
-6- Now, using any serial interface on your computer, you should be able to receive the word "test" at baudrate 9600. To see it again and again, keep pressing the reset button of your Arduino UNO.
+- Run the command: "make main.hex" to produce the .HEX file that has to be deployed on the platform. You should see this file in apps/hello_world folder after running this command.
+- Run the command: "make flash" to deploy the .HEX file on the connected platform. 
+- Now, using any serial interface on your computer, you should be able to receive the word "test" at baudrate 9600. To see it again and again, keep pressing the reset button of your Arduino UNO.
 
 ## Further Things!
-7- To see the layout of your memory, run the command "make size". By then, you should be able to see the size of bootloader section (the protected memorty area), the text section (the unprotected memory area), etc.
-8- To read the entire Flash memory, run the command "make read". This command will produce .bin file to you that is similar to the .hex one.
+- To see the layout of your memory, run the command "make size". By then, you should be able to see the size of bootloader section (the protected memorty area), the text section (the unprotected memory area), etc.
+- To read the entire Flash memory, run the command "make read". This command will produce .bin file to you that is similar to the .hex one.
 
 ## Running RA!
-1- Run the first step in the previous section. 
-2- navigate to apps/remote_attest
-3- Run: make main.hex
-4- Run: make flash
-5- Then, run the python script file verifier.py that serves as a verifier, attaching as parameters the hex file and the serial port of the attached MCU. It should be run using Python 3. This script will send a 20-byte nonce to the prover, compute the MAC over the entire 32kB of Flash using a pre-shared secret key, print the results, and print what is received as an attestation response from the prover. In the benign settings, both values much match!.
+- Run the first step in the previous section. 
+- navigate to apps/remote_attest
+- Run: make main.hex
+- Run: make flash
+- Then, run the python script file verifier.py that serves as a verifier, attaching as parameters the hex file and the serial port of the attached MCU. It should be run using Python 3. This script will send a 20-byte nonce to the prover, compute the MAC over the entire 32kB of Flash using a pre-shared secret key, print the results, and print what is received as an attestation response from the prover. In the benign settings, both values much match!.
 
 ## Running Authenticted code deployment!!
-1- Run the first step in the previous section. 
-2- navigate to apps/secure_loading
-3- Run: make main.hex
-4- Run: make flash
-5- Now the app is deployed and ready to receive binary images. Let's assume that we want to deploy the hello_world app again but over the air. Let's navigate back to apps/hello_world and run the command: make main.bin. This command will produce a binary image without the TSM. 
-6- Run the python script serial.loader.py giving it as a parameter the .bin file and the usb port where the Arduio is connected. This will send the entire image to the prover (Arduino). By then, the untrusted software will invoke the necessary function to verify the received image and deploy it if it is safe. Otherwise, it will not be deployed. To see the effect, connect to the serial interface gain and press the reset button of Arduino. 
+- Run the first step in the previous section. 
+- navigate to apps/secure_loading
+- Run: make main.hex
+- Run: make flash
+- Now the app is deployed and ready to receive binary images. Let's assume that we want to deploy the hello_world app again but over the air. Let's navigate back to apps/hello_world and run the command: make main.bin. This command will produce a binary image without the TSM. 
+- Run the python script serial.loader.py giving it as a parameter the .bin file and the usb port where the Arduio is connected. This will send the entire image to the prover (Arduino). By then, the untrusted software will invoke the necessary function to verify the received image and deploy it if it is safe. Otherwise, it will not be deployed. To see the effect, connect to the serial interface gain and press the reset button of Arduino. 
 
 
 ### Enjoy the secure world! For further info, please contact me via: ma7moud.ammar@gmail.com 
